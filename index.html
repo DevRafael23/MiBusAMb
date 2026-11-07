@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Mi Bus AMB - Monitoreo Transmecar</title>
+    
+    <!-- PWA MANIFEST -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1d4ed8">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="app">
+    <div v-if="cargando" class="loader-overlay">
+        <div class="spinner"></div>
+        <div style="font-size: 18px; font-weight: 800; color: var(--brand-primary);">Consultando flota...</div>
+    </div>
+
+    <!-- Píldora de GPS -->
+    <transition name="fade">
+        <div v-if="gpsDesactivado" class="gps-toast" @click="solicitarGPS">
+            <span class="gps-toast-dot"></span>
+            <span>Activar ubicación</span>
+        </div>
+    </transition>
+
+    <!-- HEADER: TEMA + NOMBRE DE LA APP -->
+    <div class="header-top">
+        <button class="theme-toggle-btn" @click="toggleDarkMode" title="Cambiar Tema">
+            {{ darkMode ? '☀️' : '🌙' }}
+        </button>
+        <span class="app-name">Mi Bus AMB</span>
+    </div>
+
+    <transition name="fade">
+        <div v-if="verManual" class="modal-overlay" @click.self="verManual = false; vibrar()">
+            <div class="modal-content">
+                <h2>Manual de Instrucciones <button class="btn-close" @click="verManual = false; vibrar()">&times;</button></h2>
+                <div class="manual-text">{{ textoManual }}</div>
+            </div>
+        </div>
+    </transition>
+
+    <!-- MODAL DE ALERTA CON AUTOCOMPLETADO -->
+    <transition name="fade">
+        <div v-if="verAlertas" class="modal-overlay" @click.self="cerrarModalAlertas">
+            <div class="modal-content">
+                <h2>
+                    🔔 Alerta de llegada
+                    <button class="btn-close" @click="cerrarModalAlertas">&times;</button>
+                </h2>
+                
+                <p style="font-size: 13px; color: var(--text-sub); margin-top: 0;">
+                    Escribe el nombre de un sitio o dirección. Te avisaremos cuando estés llegando.
+                </p>
+
+                <label>¿A dónde vas?</label>
+                <div class="filter-input-group" style="position: relative;">
+                    <input 
+                        type="text" 
+                        v-model="destinoTexto" 
+                        placeholder="Ej: Estadio Romelio..." 
+                        @input="filtrarReferencias"
+                        @keyup.enter="buscarDestino"
+                        @focus="mostrarSugerencias = true"
+                    />
+                    <button class="btn-reset" style="background: var(--brand-primary);" @click="buscarDestino">🔍</button>
+                </div>
+
+                <!-- LISTA DE SUGERENCIAS -->
+                <ul v-if="mostrarSugerencias && sugerenciasFiltradas.length > 0" class="sugerencias-list">
+                    <li v-for="ref in sugerenciasFiltradas" :key="ref.nombre" @click="seleccionarReferencia(ref)">
+                        <span class="ref-icon">📍</span>
+                        <div class="ref-info">
+                            <div class="ref-nombre">{{ ref.nombre }}</div>
+                            <div class="ref-categoria">{{ ref.categoria }}</div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div v-if="cargandoDestino" style="font-size: 12px; color: var(--text-sub); margin-top: 8px;">
+                    Buscando ubicación...
+                </div>
+
+                <div v-if="destinoCoords" style="margin-top: 12px; font-size: 13px; padding: 8px; background: var(--bg-input); border-radius: 8px;">
+                    <b style="color: var(--brand-primary);">📍 Destino guardado:</b><br>
+                    {{ destinoNombre }}<br>
+                    <span style="font-size: 11px; color: var(--text-sub);">
+                        Te avisaremos cuando estés a menos de {{ radioAlerta }} km.
+                    </span>
+                </div>
+
+                <label style="margin-top: 12px;">Distancia para avisar</label>
+                <select v-model.number="radioAlerta">
+                    <option :value="0.5">500 metros</option>
+                    <option :value="1">1 km</option>
+                    <option :value="2">2 km</option>
+                    <option :value="3">3 km</option>
+                </select>
+
+                <div class="modal-actions" style="margin-top: 16px;">
+                    <button v-if="destinoCoords" class="btn-action" style="background: var(--danger); color: white; border: none;" @click="borrarDestino">
+                        🗑️ Borrar
+                    </button>
+                    <button class="action-btn primary" style="flex: 1; max-width: none;" @click="cerrarModalAlertas">
+                        Listo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </transition>
+
+    <button class="toggle-panel-btn" :class="{ 'oculto': panelOculto }" @click="panelOculto = !panelOculto; vibrar()">
+        {{ panelOculto ? '▼ Mostrar Panel' : '▲ Ocultar Panel' }}
+    </button>
+
+    <div class="panel-wrapper" :class="{ 'oculto': panelOculto }">
+        <div class="status-panel" :class="{ 'offline': !conectado }">
+            {{ conectado ? 'Agente Transmecar | En vivo' : 'Sincronizando...' }}
+        </div>
+        
+        <div class="filter-card">
+            <div class="fila-doble">
+                <div v-if="conectado">
+                    <label>Buscar a menos de</label>
+                    <select v-model.number="radioBase" @change="aplicarFiltro">
+                        <option :value="1">1 km</option>
+                        <option :value="2">2 km</option>
+                        <option :value="3">3 km</option>
+                        <option :value="5">5 km</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Filtrar por Ruta</label>
+                    <div class="ruta-input-wrapper">
+                        <select v-model="rutaSeleccionada" @change="cambiarRuta">
+                            <option value="">🚌 Todas</option>
+                            <option v-for="ruta in listaRutasOficiales" :key="ruta" :value="ruta">
+                                {{ ruta }} ({{ contarPorRuta(ruta) }})
+                            </option>
+                        </select>
+                        <button class="btn-fav" :class="{ activo: rutaSeleccionada && rutaSeleccionada === rutaFavorita }" @click="guardarFavorita" title="Guardar como favorita">
+                            ★
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label>Filtrar por Móvil / Placa</label>
+                <div class="filter-input-group">
+                    <input type="text" v-model="filtro" placeholder="Ej: 082 o WHP081" @input="aplicarFiltroDebounced" />
+                    <button v-if="filtro || rutaSeleccionada" class="btn-reset" @click="limpiarFiltro">✕</button>
+                </div>
+            </div>
+
+            <div v-if="conectado" class="contador-buses">
+                {{ totalBusesVisibles }} buses a ≤{{ radioUsado }} km <span v-if="rutaSeleccionada"> de {{ rutaSeleccionada }}</span>
+            </div>
+            
+            <div v-if="radioUsado > radioBase" class="radio-badge">
+                ⚠️ Ampliado a {{ radioUsado }} km
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-actions" :class="{ 'sheet-open': selectedBus }">
+        <button class="action-btn primary" @click="centrarEnPasajero">
+            📍 Mi Ubicación
+        </button>
+        <button class="action-btn" :class="{ 'active': mostrarSitios }" @click="toggleSitios">
+            📌 Sitios
+        </button>
+        <button class="action-btn" @click="verManual = true; vibrar()">
+            📖 Manual
+        </button>
+        <button class="action-btn" :class="{ 'alerta-activa': destinoCoords }" @click="abrirAlertas">
+            🔔 Alerta
+        </button>
+        <a href="https://transmecarsas.com/pqr" target="_blank" class="action-btn" style="text-decoration: none;">
+            📝 PQR
+        </a>
+    </div>
+
+    <div class="bottom-sheet" :class="{ 'open': selectedBus }">
+        <div class="sheet-handle" @click="cerrarTarjeta"></div>
+        <button class="btn-close" @click="cerrarTarjeta">&times;</button>
+        
+        <div v-if="selectedBus">
+            <div class="modal-header">
+                <span class="badge-movil">Móvil {{ selectedBus.nroMovil }}</span>
+                <span class="badge-ruta" :style="{ background: colorDeRuta(selectedBus.ruta) }">
+                    {{ selectedBus.ruta || 'Sin ruta' }}
+                </span>
+            </div>
+            
+            <div class="modal-metrics">
+                <div class="metric">
+                    <span class="label">Tiempo espera</span>
+                    <span class="val highlight">{{ selectedBus.tiempoEstimadoMin ? '⏱️ ' + selectedBus.tiempoEstimadoMin + ' min' : '---' }}</span>
+                </div>
+                <div class="metric">
+                    <span class="label">Distancia</span>
+                    <span class="val highlight">{{ selectedBus.distanciaKm ? '📍 ' + selectedBus.distanciaKm + ' km' : '---' }}</span>
+                </div>
+                <div class="metric">
+                    <span class="label">Velocidad</span>
+                    <span class="val">{{ Math.round(selectedBus.speed) }} km/h</span>
+                </div>
+                <div class="metric">
+                    <span class="label">Placa</span>
+                    <span class="val">{{ selectedBus.placa }}</span>
+                </div>
+                <div class="metric" style="grid-column: span 2; padding: 8px;">
+                    <span class="label">Ubicación actual</span>
+                    <span class="address">{{ direccionDetalle }}</span>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-action primary" @click="centrarEnBus(selectedBus)">🎯 Centrar en Mapa</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- SCRIPT PRINCIPAL EXTERNO -->
+<script src="js/app.js"></script>
+
+<!-- REGISTRO PWA -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker registrado'))
+                .catch(err => console.warn('Error SW', err));
+        });
+    }
+</script>
+</body>
+</html>

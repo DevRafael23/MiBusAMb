@@ -1,0 +1,64 @@
+:root {
+    /* Marca */
+    --brand-primary: #1d4ed8; 
+    --brand-primary-dark: #1e3a8a; 
+    --brand-primary-light: #3b82f6; 
+    --brand-primary-soft: #dbeafe;
+    
+    /* Superficies (Modo Diurno) */
+    --bg-page: #f1f5f9; 
+    --bg-card: #ffffff;
+    --bg-input: #f8fafc; 
+    --bg-hover: #f1f5f9;
+    
+    /* Bordes y Texto */
+    --border-color: #e2e8f0; 
+    --border-strong: #cbd5e1; 
+    --border-brand: #bfdbfe;
+    --text-main: #0f172a; 
+    --text-sub: #475569; 
+    --text-muted: #94a3b8;
+    
+    /* Estados */
+    --success: #10b981; 
+    --warning: #f59e0b; 
+    --danger: #ef4444;
+    
+    /* Sombras y Radios */
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05); 
+    --shadow-md: 0 4px 8px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.1); 
+    --shadow-xl: 0 20px 40px rgba(15, 23, 42, 0.14);
+    --radius-sm: 8px; 
+    --radius-md: 12px; 
+    --radius-lg: 16px; 
+    --radius-sheet: 24px;
+    
+    /* Botones (Diurno) */
+    --btn-bg: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 100%);
+    --btn-text: #ffffff;
+    --btn-bg-active: var(--brand-primary-dark);
+    --label-color: var(--brand-primary);
+}
+
+body.dark-mode {
+    /* Superficies (Modo Oscuro) */
+    --bg-page: #0f172a; 
+    --bg-card: #2563eb !important; 
+    --bg-input: #1e40af !important; 
+    --bg-hover: #1d4ed8 !important;
+    
+    /* Bordes y Texto */
+    --border-color: #3b82f6 !important; 
+    --border-strong: #60a5fa !important; 
+    --border-brand: #60a5fa !important;
+    --text-main: #ffffff !important; 
+    --text-sub: #dbeafe !important; 
+    --text-muted: #bfdbfe !important; 
+    --label-color: #ffffff !important;
+
+    /* Botones (Oscuro) */
+    --btn-bg: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 100%);
+    --btn-text: #ffffff;
+    --btn-bg-active: var(--brand-primary-dark);
+}

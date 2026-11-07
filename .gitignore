@@ -1,0 +1,34 @@
+# Dependencias
+node_modules/
+vendor/
+
+# Entornos y secretos
+.env
+.env.local
+
+# Backups y binarios (¡Fuera los APK y ZIP!)
+*.zip
+*.rar
+*.7z
+*.apk
+
+# Archivos de sistema e IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# Temporales
+*.cache
+*.tmp
+# Archivos de datos dinámicos (caché generada por la app)
+data/telemetria.json
+data/telemetria_data.json
+data/rutas_cache.json
+
+
+
+# Archivos de Excel
+*.xlsx
+*.xls

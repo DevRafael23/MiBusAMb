@@ -1,0 +1,39 @@
+MANUAL DE USO - Mi Bus AMB - TRANSMECAR
+
+Bienvenido a la nueva aplicación "Mi Bus AMB". Sigue estas instrucciones para aprovechar al máximo todas las funciones.
+
+1. PERMISOS DE UBICACIÓN (GPS)
+Para que la app funcione correctamente, debes permitir el acceso a tu ubicación. Si ves el botón rojo de "Activar ubicación", tócalo y acepta los permisos en tu navegador. Verás un círculo azul alrededor de tu posición; este indica el margen de error de tu GPS.
+
+2. INSTALAR COMO APLICACIÓN (PWA)
+Esta web puede funcionar como una app nativa. En tu navegador (Chrome o Safari), abre el menú y selecciona "Añadir a la pantalla de inicio" o "Instalar aplicación". Así se abrirá a pantalla completa, sin la barra de direcciones, y cargará mucho más rápido.
+
+3. BUSCAR CERCA DE MÍ
+Por defecto, el sistema te mostrará los buses que estén a menos de 2 km de distancia. Si no hay suficientes, el sistema ampliará automáticamente el radio de búsqueda hasta 5 km. Puedes cambiar este radio manualmente en el selector "Buscar a menos de".
+
+4. FILTROS DE RUTA Y PLACA
+- Filtrar por Ruta: Usa la estrella (★) para guardar tu ruta favorita (ej. CALLE_30). La app recordará tu selección la próxima vez que la abras.
+- Filtrar por Móvil/Placa: Escribe el número del bus o su placa para encontrarlo directamente en el mapa.
+
+5. INFORMACIÓN DEL BUS
+Toca cualquier bus en el mapa para abrir la tarjeta inferior. Allí verás la velocidad, la distancia a la que está de ti, la ruta asignada y el tiempo estimado de espera. Si el bus está en movimiento, una flecha indicará hacia dónde va.
+
+6. ALERTAS DE PROXIMIDAD (Llegada a destino)
+- Toca el botón "🔔 Alerta" en la barra inferior.
+- Escribe el nombre de tu destino (ej. Estadio Romelio, Aeropuerto). A medida que escribas, aparecerán sugerencias de sitios conocidos.
+- Selecciona una sugerencia, elige la distancia de aviso (ej. 500 metros) y guarda.
+- La app usará tu GPS para medir la distancia real. Cuando estés a punto de llegar a ese destino, tu celular vibrará y sonará una alarma para avisarte que debes bajarte.
+
+7. SITIOS Y REFERENCIAS
+Usa el botón "📌 Sitios" para ver puntos de referencia importantes en el mapa. Si buscas un lugar específico, el buscador de alertas tiene un directorio de sitios de la ciudad para que no tengas que escribir direcciones exactas.
+
+8. PQR (Peticiones, Quejas, Reclamos)
+Si tienes algún problema con el servicio, toca el botón "📝 PQR" en la barra inferior. Esto te llevará directamente a la página oficial de atención al usuario de Transmecar.
+
+9. MODO OSCURO
+Para cuidar tu vista y ahorrar batería, toca el ícono del sol/luna (🌙/☀️) en la esquina superior izquierda. La app cambiará automáticamente a un tema oscuro con colores de alto contraste.
+
+10. ACTUALIZACIÓN DE DATOS
+Los buses se actualizan en tiempo real cada 4 segundos. Si en algún momento notas que la aplicación no se mueve, revisa tu conexión a internet o arrastra el mapa hacia abajo para forzar la recarga.
+
+¡Gracias por usar el sistema de monitoreo de ruta de Transmecar SAS!

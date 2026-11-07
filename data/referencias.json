@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Estadio Romelio Martínez",
+    "lat": 10.9648,
+    "lng": -74.7845,
+    "categoria": "Deportes"
+  },
+  {
+    "nombre": "Parque Venezuela",
+    "lat": 10.9780,
+    "lng": -74.7920,
+    "categoria": "Recreación"
+  },
+  {
+    "nombre": "Aeropuerto Internacional Ernesto Cortissoz",
+    "lat": 10.8890,
+    "lng": -74.7810,
+    "categoria": "Transporte"
+  },
+  {
+    "nombre": "Gran Malecón del Río",
+    "lat": 11.0180,
+    "lng": -74.8100,
+    "categoria": "Turismo"
+  },
+  {
+    "nombre": "Barrio El Prado",
+    "lat": 10.9870,
+    "lng": -74.8000,
+    "categoria": "Barrio"
+  },
+  {
+    "nombre": "Centro Comercial Buenavista",
+    "lat": 11.0090,
+    "lng": -74.8390,
+    "categoria": "Comercial"
+  },
+  {
+    "nombre": "Universidad del Atlántico",
+    "lat": 10.9650,
+    "lng": -74.7960,
+    "categoria": "Educación"
+  },
+  {
+    "nombre": "Hospital Universidad del Norte",
+    "lat": 11.0210,
+    "lng": -74.8500,
+    "categoria": "Salud"
+  },
+  {
+    "nombre": "Estación Joaquín Barrios",
+    "lat": 10.9750,
+    "lng": -74.7880,
+    "categoria": "Transmetro"
+  },
+  {
+    "nombre": "Puerto Colombia (Playas)",
+    "lat": 11.0230,
+    "lng": -74.8630,
+    "categoria": "Turismo"
+  }
+]

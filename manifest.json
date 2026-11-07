@@ -1,0 +1,22 @@
+{
+  "name": "Pasajero Transmecar",
+  "short_name": "Transmecar",
+  "description": "Monitoreo de buses en tiempo real",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1d4ed8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./imagenes/buses/carro000.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./imagenes/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
