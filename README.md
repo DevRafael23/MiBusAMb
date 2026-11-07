@@ -1,2 +1,1 @@
-# Python_Project_1
-Mis inicios con Python - CRUD-USERS
+PWA de monitoreo GPS en tiempo real con Leaflet, arquitectura micro-cron en PHP y geofencing.
